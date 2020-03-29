@@ -1,0 +1,93 @@
+#!/usr/bin/ruby
+
+require 'asciidoctor'
+require 'json'
+
+INTRO = File::open "intro.adoc", "r"
+OUTPUT = File::open  "index.html", "w"
+DOWNL_TXT = "Link de Download"
+NOMES = {
+    "MAT" => "Matemática",
+    "MAP" => "MAtemática Aplicada",
+    "MAE" => "Estatística",
+    "MAC" => "Computação"
+}
+
+def departamento parent, dep, discs
+    sec = Asciidoctor::Section::new parent, 1
+    sec.title = "Departamento de #{NOMES[dep]}"
+
+    for disc in discs do 
+        codigo = disc["codigo"]
+        nome = disc["nome"]
+        refs = disc["referencias"]
+
+        sec << (disciplina sec, dep, codigo, nome, refs)
+    end
+
+    sec
+end
+
+def disciplina parent, dep, codigo, nome, refs
+    sec = Asciidoctor::Section::new parent, 2
+    sec.title = "#{dep}#{codigo} - #{nome}"
+
+    list = Asciidoctor::List::new sec, :ulist
+    sec << list
+
+    for ref in refs do
+        list << (referencia list, ref)
+    end
+
+    sec
+end
+
+def referencia parent, ref
+    ano = ref["ano"]
+    editora = ref["editora"]
+    src = "#{autor ref}, _#{titulo ref}_, Editora #{editora}, #{ano}."
+
+    item = Asciidoctor::ListItem::new parent, src
+    item << (link item, ref)
+end
+
+def autor ref 
+    ref["autor"] 
+end
+
+def titulo ref 
+    ref["titulo"] 
+end
+
+def link parent, ref
+    url = ref["link"]
+    output_opts = {:type => :strong}
+    anchor_opts = {:type => :xref, :alt => DOWNL_TXT}
+
+    output = Asciidoctor::Block::new parent, :paragraph, opts: output_opts
+    anchor = Asciidoctor::Inline::new output, :anchor, DOWNL_TXT, anchor_opts
+
+    if url.start_with? "http"
+        anchor.target = url
+    else
+        anchor.target = "https://#{url}"
+    end
+
+    output << anchor
+end
+
+# Carrega a introdução
+doc = Asciidoctor::load INTRO, {:header_footer => true}
+
+# Carrega os dados a serem adicionados
+deps = File::open "referencias.json", "r"
+deps = JSON.parse(deps.read)
+
+# Adiciona a informação de cada departamento
+deps.each do |dep, discs|
+    doc << (departamento doc, dep, discs)
+end
+
+# Salva o site
+doc.write doc.convert, OUTPUT
+
