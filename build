@@ -6,6 +6,8 @@ require 'json'
 INTRO = File::open "intro.adoc", "r"
 OUTPUT = File::open  "index.html", "w"
 DOWNL_TXT = "Link de Download"
+STRONG_OPTS = {:type => :strong}
+ANCHOR_OPTS = {:type => :xref, :alt => DOWNL_TXT}
 NOMES = {
     "MAT" => "Matemática",
     "MAP" => "MAtemática Aplicada",
@@ -16,6 +18,7 @@ NOMES = {
 def departamento parent, dep, discs
     sec = Asciidoctor::Section::new parent, 1
     sec.title = "Departamento de #{NOMES[dep]}"
+    discs.sort_by { |d| d["code"] }
 
     for disc in discs do 
         codigo = disc["codigo"]
@@ -31,11 +34,12 @@ end
 def disciplina parent, dep, codigo, nome, refs
     sec = Asciidoctor::Section::new parent, 2
     sec.title = "#{dep}#{codigo} - #{nome}"
+    refs.sort_by { |ref| ref["titulo"] }
 
     list = Asciidoctor::List::new sec, :ulist
     sec << list
 
-    for ref in refs do
+    for ref in refs.sort_by do
         list << (referencia list, ref)
     end
 
@@ -61,11 +65,9 @@ end
 
 def link parent, ref
     url = ref["link"]
-    output_opts = {:type => :strong}
-    anchor_opts = {:type => :xref, :alt => DOWNL_TXT}
 
-    output = Asciidoctor::Block::new parent, :paragraph, opts: output_opts
-    anchor = Asciidoctor::Inline::new output, :anchor, DOWNL_TXT, anchor_opts
+    output = Asciidoctor::Block::new parent, :paragraph, opts: STRONG_OPTS
+    anchor = Asciidoctor::Inline::new output, :anchor, DOWNL_TXT, ANCHOR_OPTS
 
     if url.start_with? "http"
         anchor.target = url
@@ -84,8 +86,11 @@ deps = File::open "referencias.json", "r"
 deps = JSON.parse(deps.read)
 
 # Adiciona a informação de cada departamento
-deps.each do |dep, discs|
-    doc << (departamento doc, dep, discs)
+
+deps.sort_by(&:first).each do |dep, discs|
+    if discs.length > 0
+        doc << (departamento doc, dep, discs)
+    end
 end
 
 # Salva o site
