@@ -6,34 +6,66 @@ require 'json'
 INTRO = File::open "intro.adoc", "r"
 OUTPUT = File::open  "index.html", "w"
 DOWNL_TXT = "Link de Download"
-STRONG_OPTS = {:type => :strong}
-ANCHOR_OPTS = {:type => :xref, :alt => DOWNL_TXT}
+ANCHOR_OPTS = {:type => :link, :alt => DOWNL_TXT}
 NOMES = {
     "MAT" => "Matemática",
-    "MAP" => "MAtemática Aplicada",
+    "MAP" => "Matemática Aplicada",
     "MAE" => "Estatística",
     "MAC" => "Computação"
 }
 
+class Integer
+  ROMAN_NUMBERS = {
+    1000 => "M",
+     900 => "CM",
+     500 => "D",
+     400 => "CD",
+     100 => "C",
+      90 => "XC",
+      50 => "L",
+      40 => "XL",
+      10 => "X",
+       9 => "IX",
+       5 => "V",
+       4 => "IV",
+       1 => "I",
+  }
+
+  def roman
+    n = self
+    roman = ""
+
+    ROMAN_NUMBERS.each do |value, letter|
+      roman << letter*(n / value)
+      n = n % value
+    end
+
+    roman
+  end
+end
+
 def departamento parent, dep, discs
     sec = Asciidoctor::Section::new parent, 1
     sec.title = "Departamento de #{NOMES[dep]}"
+    sec.numbered = false
+    
     discs.sort_by { |d| d["code"] }
 
     for disc in discs do 
-        codigo = disc["codigo"]
         nome = disc["nome"]
         refs = disc["referencias"]
 
-        sec << (disciplina sec, dep, codigo, nome, refs)
+        sec << (disciplina sec, codigo(dep, disc["codigo"]), nome, refs)
     end
 
     sec
 end
 
-def disciplina parent, dep, codigo, nome, refs
+def disciplina parent, codigo, nome, refs
     sec = Asciidoctor::Section::new parent, 2
-    sec.title = "#{dep}#{codigo} - #{nome}"
+    sec.title = "#{codigo} - #{nome}"
+    sec.numbered = false
+    
     refs.sort_by { |ref| ref["titulo"] }
 
     list = Asciidoctor::List::new sec, :ulist
@@ -48,26 +80,44 @@ end
 
 def referencia parent, ref
     ano = ref["ano"]
-    editora = ref["editora"]
-    src = "#{autor ref}, _#{titulo ref}_, Editora #{editora}, #{ano}."
+    src = "#{autor ref}. #{titulo ref}. #{ano}"
 
     item = Asciidoctor::ListItem::new parent, src
     item << (link item, ref)
 end
 
 def autor ref 
-    ref["autor"] 
+    nomes = ref["autor"].split(/ +/)
+    
+    "#{nomes.last.upcase}, #{nomes[0..-2].join ' '}"
 end
 
-def titulo ref 
-    ref["titulo"] 
+def titulo ref
+    output = "_#{ref["titulo"].strip}_"
+
+    if ref.key? "subtitulo"
+        output << ": _#{ref["subtitulo"].strip}_"
+    end
+
+    if ref.key? "volume"
+        output << ", _vol. #{ref["volume"].roman}_"
+    end
+
+    output
+end
+
+def codigo dep, c
+    if c.upcase.start_with? dep
+        c = c[3..-1]
+    end
+
+    dep + c.rjust(4, "0")
 end
 
 def link parent, ref
     url = ref["link"]
-
-    output = Asciidoctor::Block::new parent, :paragraph, opts: STRONG_OPTS
-    anchor = Asciidoctor::Inline::new output, :anchor, DOWNL_TXT, ANCHOR_OPTS
+    txt =  "<strong>#{DOWNL_TXT}</strong>"
+    anchor = Asciidoctor::Inline::new parent, :anchor, txt, ANCHOR_OPTS
 
     if url.start_with? "http"
         anchor.target = url
@@ -75,7 +125,7 @@ def link parent, ref
         anchor.target = "https://#{url}"
     end
 
-    output << anchor
+    anchor
 end
 
 # Carrega a introdução
