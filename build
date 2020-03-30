@@ -3,7 +3,6 @@
 require 'asciidoctor'
 require 'json'
 
-INTRO = File::open "intro.adoc", "r"
 OUTPUT = File::open  "index.html", "w"
 DOWNL_TXT = "Link de Download"
 ANCHOR_OPTS = {:type => :link, :alt => DOWNL_TXT}
@@ -44,10 +43,17 @@ class Integer
   end
 end
 
+class String
+    def upcase?
+        !self[/[[:lower:]]/]
+    end
+end
+
 def departamento parent, dep, discs
     sec = Asciidoctor::Section::new parent, 1
     sec.title = "Departamento de #{NOMES[dep]}"
     sec.numbered = false
+    sec.id = dep.downcase
     
     discs.sort_by { |d| d["code"] }
 
@@ -65,6 +71,7 @@ def disciplina parent, codigo, nome, refs
     sec = Asciidoctor::Section::new parent, 2
     sec.title = "#{codigo} - #{nome}"
     sec.numbered = false
+    sec.id = codigo.downcase
     
     refs.sort_by { |ref| ref["titulo"] }
 
@@ -80,26 +87,31 @@ end
 
 def referencia parent, ref
     ano = ref["ano"]
-    src = "#{autor ref}. #{titulo ref}. #{ano}"
+    autores = ref["autores"]
+    src = "#{autores.map { |a| autor a }.join '.; '}. #{titulo ref}. #{ano}"
 
     item = Asciidoctor::ListItem::new parent, src
     item << (link item, ref)
 end
 
-def autor ref 
-    nomes = ref["autor"].split(/ +/)
+def autor nome 
+    nomes = nome.split(/ +/)
+    first_names = nomes[0..-2]
+        .map {|nome| nome[0, 1]}
+        .select(&:upcase?)
+        .join '. '
     
-    "#{nomes.last.upcase}, #{nomes[0..-2].join ' '}"
+    "#{nomes.last.upcase}, #{first_names}"
 end
 
 def titulo ref
     output = "_#{ref["titulo"].strip}_"
 
-    if ref.key? "subtitulo"
+    if ref["subtitulo"]
         output << ": _#{ref["subtitulo"].strip}_"
     end
 
-    if ref.key? "volume"
+    if ref["volume"]
         output << ", _vol. #{ref["volume"].roman}_"
     end
 
@@ -129,7 +141,7 @@ def link parent, ref
 end
 
 # Carrega a introdução
-doc = Asciidoctor::load INTRO, {:header_footer => true}
+doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
 
 # Carrega os dados a serem adicionados
 deps = File::open "referencias.json", "r"

@@ -1,7 +1,7 @@
 = Atividades Online Durante a Quarentena
 CAMat <camat.usp@gmail.com>
 :favicon: ./favicon.svg
-:toc: macro
+:toc: left
 :toc-title: Conteúdos
 :note-caption: Nota
 :icons: font
@@ -39,6 +39,4 @@ https://qrgo.page.link/DRMk5[Comunique o CAMat!]
 [NOTE]
 Quer contribuir com esse site? Acesse 
 https://github.com/camat-usp/Atividades-Online-Durante-a-Quarentena[nossa página no GitHub]!
-
-toc::[]
 
