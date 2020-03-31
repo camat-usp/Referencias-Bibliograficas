@@ -4,8 +4,7 @@ require 'asciidoctor'
 require 'json'
 
 OUTPUT = File::open  "index.html", "w"
-DOWNL_TXT = "Link de Download"
-ANCHOR_OPTS = {:type => :link, :alt => DOWNL_TXT}
+LINK_TEXT = "Link de Download"
 NOMES = {
     "MAT" => "Matemática",
     "MAP" => "Matemática Aplicada",
@@ -86,18 +85,21 @@ def disciplina parent, codigo, nome, refs
 end
 
 def referencia parent, ref
-    ano = ref["ano"]
     autores = ref["autores"]
-    src = "#{autores.map { |a| autor a }.join '.; '}. #{titulo ref}. #{ano}"
+        .sort
+        .map { |nome| autor nome }
+        .join ". ; "
+
+    src = "#{autores}. #{titulo ref}. #{ref["ano"]}"
 
     item = Asciidoctor::ListItem::new parent, src
-    item << (link item, ref)
+    item << (link item, ref["link"], LINK_TEXT)
 end
 
 def autor nome 
     nomes = nome.split(/ +/)
     first_names = nomes[0..-2]
-        .map {|nome| nome[0, 1]}
+        .map { |nome| nome[0, 1] }
         .select(&:upcase?)
         .join '. '
     
@@ -111,7 +113,7 @@ def titulo ref
         output << ": _#{ref["subtitulo"].strip}_"
     end
 
-    if ref["volume"]
+    if ref["volume"] && ref["volume"].class == Integer
         output << ", _vol. #{ref["volume"].roman}_"
     end
 
@@ -126,10 +128,9 @@ def codigo dep, c
     dep + c.rjust(4, "0")
 end
 
-def link parent, ref
-    url = ref["link"]
-    txt =  "<strong>#{DOWNL_TXT}</strong>"
-    anchor = Asciidoctor::Inline::new parent, :anchor, txt, ANCHOR_OPTS
+def link parent, url, text, alt: text
+    txt =  "<strong>#{text}</strong>"
+    anchor = Asciidoctor::Inline::new parent, :anchor, txt, {:type => :link}
 
     if url.start_with? "http"
         anchor.target = url

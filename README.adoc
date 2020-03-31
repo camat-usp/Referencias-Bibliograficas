@@ -1,11 +1,5 @@
 = Referências Bibliográficas
 CAMat <camat.usp@gmail.com>
-:favicon: ./favicon.svg
-:toc: left
-:toc-title: Conteúdos
-:note-caption: Nota
-:icons: font
-:stylesheet: styles.css
 :hide-uri-scheme:
 
 Reunimos neste site alguns links de download dos livros comumento utilizados
@@ -22,4 +16,3 @@ de conhecimento, enquanto o resto do mundo está bloqueado. Mas vocês não
 precisam -- na verdade, moralmente, não podem -- manter este privilégio para 
 vocês mesmos. Vocês têm um dever de compartilhar isso com o mundo.
 ____
-
