@@ -92,13 +92,13 @@ def referencia parent, ref
 
     src = "#{autores}. #{titulo ref}. #{ref["ano"]}"
     item = Asciidoctor::ListItem::new parent, src
-    #links = Asciidoctor::List::new item, :ulist
+    links = Asciidoctor::List::new item, :ulist
 
     ref["links"].sort_by(&:first).each do |format, url|
-        item << (link item, url, "Download em #{format.strip.upcase}")
+        links << (link links, url, "Download em #{format.strip.upcase}")
     end
 
-    item
+    item << links
 end
 
 def autor nome 
@@ -135,7 +135,8 @@ end
 
 def link parent, url, text
     txt =  "<strong>#{text}</strong>"
-    anchor = Asciidoctor::Inline::new parent, :anchor, txt, {:type => :link}
+    output = Asciidoctor::ListItem::new parent, ""
+    anchor = Asciidoctor::Inline::new output, :anchor, txt, {:type => :link}
 
     if url.start_with? "http"
         anchor.target = url
@@ -143,7 +144,7 @@ def link parent, url, text
         anchor.target = "https://#{url}"
     end
 
-    anchor
+    output << anchor
 end
 
 # Carrega a introdução
