@@ -91,9 +91,14 @@ def referencia parent, ref
         .join ". ; "
 
     src = "#{autores}. #{titulo ref}. #{ref["ano"]}"
-
     item = Asciidoctor::ListItem::new parent, src
-    item << (link item, ref["link"], LINK_TEXT)
+    #links = Asciidoctor::List::new item, :ulist
+
+    ref["links"].sort_by(&:first).each do |format, url|
+        item << (link item, url, "Download em #{format.strip.upcase}")
+    end
+
+    item
 end
 
 def autor nome 
@@ -128,7 +133,7 @@ def codigo dep, c
     dep + c.rjust(4, "0")
 end
 
-def link parent, url, text, alt: text
+def link parent, url, text
     txt =  "<strong>#{text}</strong>"
     anchor = Asciidoctor::Inline::new parent, :anchor, txt, {:type => :link}
 

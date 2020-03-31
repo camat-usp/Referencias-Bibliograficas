@@ -9,14 +9,18 @@
                     "volume": 1,
                     "autores": ["Hamilton Luiz Guidorizzi"],
                     "ano": 2001,
-                    "link": "http://booksdl.org/get.php?md5=27782d84815c37b0448c6c9340aae879&key=3QHV8HH5PTW3AO11&mirr=1"
+                    "links": {
+                        "pdf": "http://booksdl.org/get.php?md5=27782d84815c37b0448c6c9340aae879&key=3QHV8HH5PTW3AO11&mirr=1"
+                    }
                 },
                 {
                     "titulo": "Calculus",
                     "volume": null,
                     "autores": ["Hamilton Luiz Guidorizzi"],
                     "ano": 2002,
-                    "link": "http://booksdl.org/get.php?md5=be9f4280027d4f5b8462c591c2dbba4b&key=B4CYDZPY9ZC4A2Q4&mirr=1"
+                    "links": {
+                        "pdf": "http://booksdl.org/get.php?md5=be9f4280027d4f5b8462c591c2dbba4b&key=B4CYDZPY9ZC4A2Q4&mirr=1"
+                    }
                 }
             ]
         },
@@ -30,7 +34,9 @@
                     "volume": null,
                     "autores": ["Paulo Boulos", "Ivan de Camargo"],
                     "ano": 2005,
-                    "link": "http://booksdl.org/get.php?md5=86ae0838d9268e28fabacb448dafdc51&key=ME33DB0WRSS54825&mirr=1"
+                    "links": {
+                        "pdf": "http://booksdl.org/get.php?md5=86ae0838d9268e28fabacb448dafdc51&key=ME33DB0WRSS54825&mirr=1"
+                    }
                 }
             ]
         },
@@ -43,7 +49,9 @@
                     "volume": null,
                     "autores": ["Ivan Niver", "Hebert S. Zuckerman", "Hugh L. Montgomery"],
                     "ano": 1991,
-                    "link": "http://booksdl.org/get.php?md5=078ae46df278357da8a2496a0a47e3c2&key=SNH1YK5P9UDFFQAR&mirr=1"
+                    "links": {
+                        "pdf": "http://booksdl.org/get.php?md5=078ae46df278357da8a2496a0a47e3c2&key=SNH1YK5P9UDFFQAR&mirr=1"
+                    }
                 }
 
             ]
@@ -57,15 +65,18 @@
                     "volume": 3,
                     "autores": ["Hamilton Luiz Guidorizzi"],
                     "ano": 2002,
-                    "link": "http://booksdl.org/get.php?md5=02f3b98b392035c518966745291e7f8b&key=494K6EGS3QIX7T78&mirr=1"
+                    "links": {
+                        "pdf": "http://booksdl.org/get.php?md5=02f3b98b392035c518966745291e7f8b&key=494K6EGS3QIX7T78&mirr=1"
+                    }
                 },
                 {
                     "titulo": "Cálculo com funções de uma variável, com uma introdução à Álgebra Linear",
                     "volume": null,
                     "autores": ["Tom Mike Apostol"],
                     "ano": 1988,
-                    "link": "booksdl.org/get.php?md5=705d93e505d6727de1e4fa281b863736&key=DHU87MSMZWBGE542&mirr=1"
-
+                    "links": {
+                        "pdf": "booksdl.org/get.php?md5=705d93e505d6727de1e4fa281b863736&key=DHU87MSMZWBGE542&mirr=1"
+                    }
                 }
             ]
         },
@@ -78,7 +89,9 @@
                     "volume": 1,
                     "autores": ["Elon Lages Lima"],
                     "ano": 2007,
-                    "link": "booksdl.org/get.php?md5=c048dcbafd3af1d2ff881d7531a54d32&key=PTTKWRZ6D7O3Y4US&mirr=1"
+                    "links": {
+                        "pdf": "booksdl.org/get.php?md5=c048dcbafd3af1d2ff881d7531a54d32&key=PTTKWRZ6D7O3Y4US&mirr=1"
+                    }
                 }
             ]
         },
@@ -91,7 +104,9 @@
                     "volume": null,
                     "autores":["Kenneth Hoffman", "Ray Kunze"],
                     "ano": 1971,
-                    "link": "booksdl.org/get.php?md5=3c2b1c284da2b824addb8b9788772bc0&key=844FKSG852KV2HY9&mirr=1"
+                    "links": {
+                        "pdf": "booksdl.org/get.php?md5=3c2b1c284da2b824addb8b9788772bc0&key=844FKSG852KV2HY9&mirr=1"
+                    }
                 }
             ]
         },
@@ -104,7 +119,9 @@
                     "volume": null,
                     "autores": ["Israel Nathan Herstein"],
                     "ano": 1975,
-                    "link": "booksdl.org/get.php?md5=6cd84ac79c05605868c82fde6e0ced2e&key=FAA6JARUV02LFWDO&mirr=1"
+                    "links": {
+                        "pdf": "booksdl.org/get.php?md5=6cd84ac79c05605868c82fde6e0ced2e&key=FAA6JARUV02LFWDO&mirr=1"
+                    }
                 }
             ]
         }
