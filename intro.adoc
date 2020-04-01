@@ -1,10 +1,8 @@
 = Referências Bibliográficas
 CAMat <camat.usp@gmail.com>
-:favicon: assets/favicon.svg
 :toc: left
 :toc-title: Conteúdos
-:note-caption: Nota
-:icons: font
+:favicon: assets/favicon.svg
 :stylesheet: assets/styles.css
 :hide-uri-scheme:
 
@@ -23,5 +21,6 @@ precisam -- na verdade, moralmente, não podem -- manter este privilégio para
 vocês mesmos. Vocês têm um dever de compartilhar isso com o mundo.
 ____
 
-Confira link:manifesto.html[aqui] o manifesto na integra.
+Confira link:manifesto.html[manifesto na integra]! Confira também 
+https://github.com/camat-usp/Referencias-Bibliograficas[nossa página no GitHub]!
 

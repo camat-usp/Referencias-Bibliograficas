@@ -4,7 +4,7 @@ require 'asciidoctor'
 require 'json'
 
 OUTPUT = File::open  "index.html", "w"
-LINK_TEXT = "Link de Download"
+FAVICON = "./assets/favicon.svg"
 NOMES = {
     "MAT" => "Matemática",
     "MAP" => "Matemática Aplicada",
@@ -163,5 +163,5 @@ deps.sort_by(&:first).each do |dep, discs|
 end
 
 # Salva o site
-doc.write doc.convert, OUTPUT
+OUTPUT.write doc.convert
 
