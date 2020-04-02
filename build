@@ -48,7 +48,8 @@ class String
     end
 end
 
-def departamento parent, dep, discs
+# Public: Cria a seção de um dado departamento.
+def department parent, dep, discs
     sec = Asciidoctor::Section::new parent, 1
     sec.title = "Departamento de #{NOMES[dep]}"
     sec.numbered = false
@@ -58,39 +59,39 @@ def departamento parent, dep, discs
 
     for disc in discs do 
         nome = disc["nome"]
-        refs = disc["referencias"]
+        refs = disc["references"]
 
-        sec << (disciplina sec, codigo(dep, disc["codigo"]), nome, refs)
+        sec << (subject sec, code(dep, disc["code"]), nome, refs)
     end
 
     sec
 end
 
-def disciplina parent, codigo, nome, refs
+def subject parent, code, nome, refs
     sec = Asciidoctor::Section::new parent, 2
-    sec.title = "#{codigo} - #{nome}"
+    sec.title = "#{code} - #{nome}"
     sec.numbered = false
-    sec.id = codigo.downcase
+    sec.id = code.downcase
     
-    refs.sort_by { |ref| ref["titulo"] }
+    refs.sort_by { |ref| ref["title"] }
 
     list = Asciidoctor::List::new sec, :ulist
     sec << list
 
     for ref in refs.sort_by do
-        list << (referencia list, ref)
+        list << (reference list, ref)
     end
 
     sec
 end
 
-def referencia parent, ref
-    autores = ref["autores"]
+def reference parent, ref
+    authores = ref["authores"]
         .sort
-        .map { |nome| autor nome }
+        .map { |nome| author nome }
         .join ". ; "
 
-    src = "#{autores}. #{titulo ref}. #{ref["ano"]}"
+    src = "#{authores}. #{title ref}. #{ref["ano"]}"
     item = Asciidoctor::ListItem::new parent, src
     links = Asciidoctor::List::new item, :ulist
 
@@ -101,7 +102,7 @@ def referencia parent, ref
     item << links
 end
 
-def autor nome 
+def author nome 
     nomes = nome.split(/ +/)
     first_names = nomes[0..-2]
         .map { |nome| nome[0, 1] }
@@ -111,11 +112,11 @@ def autor nome
     "#{nomes.last.upcase}, #{first_names}"
 end
 
-def titulo ref
-    output = "_#{ref["titulo"].strip}_"
+def title ref
+    output = "_#{ref["title"].strip}_"
 
-    if ref["subtitulo"]
-        output << ": _#{ref["subtitulo"].strip}_"
+    if ref["subtitle"]
+        output << ": _#{ref["subtitle"].strip}_"
     end
 
     if ref["volume"] && ref["volume"].class == Integer
@@ -125,12 +126,12 @@ def titulo ref
     output
 end
 
-def codigo dep, c
-    if c.upcase.start_with? dep
+def code dep, c
+    if c.upcase.start_with? dep.upcase
         c = c[3..-1]
     end
 
-    dep + c.rjust(4, "0")
+    dep.upcase + c.rjust(4, "0")
 end
 
 def link parent, url, text
@@ -151,14 +152,14 @@ end
 doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
 
 # Carrega os dados a serem adicionados
-deps = File::open "referencias.json", "r"
+deps = File::open "references.json", "r"
 deps = JSON.parse(deps.read)
 
-# Adiciona a informação de cada departamento
+# Adiciona a informação de cada department
 
 deps.sort_by(&:first).each do |dep, discs|
     if discs.length > 0
-        doc << (departamento doc, dep, discs)
+        doc << (department doc, dep, discs)
     end
 end
 
