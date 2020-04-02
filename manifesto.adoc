@@ -1,4 +1,4 @@
-= O Manifesto Cominusta
+= Manifesto da Guerrilha do Acesso Aberto
 Aaron Swartz
 07-2008
 :stylesheet: assets/styles.css
