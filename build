@@ -1,16 +1,26 @@
 #!/usr/bin/ruby
 
-require 'asciidoctor'
-require 'json'
+require "asciidoctor"
+require "json"
+require "csv"
 
 OUTPUT = File::open  "index.html", "w"
 FAVICON = "./assets/favicon.svg"
-NOMES = {
+DEPARTMENT = {
     "MAT" => "Matemática",
     "MAP" => "Matemática Aplicada",
     "MAE" => "Estatística",
     "MAC" => "Computação"
 }
+
+CODE = "CÓDIGO"
+NAME = "NOME"
+TITLE = "TÍTULO"
+VOLUME = "VOLUME"
+AUTHORS = "AUTORES"
+YEAR = "ANO"
+PDF_LINK = "LINK PDF"
+
 
 class Integer
   ROMAN_NUMBERS = {
@@ -48,90 +58,147 @@ class String
     end
 end
 
-# Public: Cria a seção de um dado departamento.
-def department parent, dep, discs
-    sec = Asciidoctor::Section::new parent, 1
-    sec.title = "Departamento de #{NOMES[dep]}"
-    sec.numbered = false
-    sec.id = dep.downcase
+class CSV::Table
+    def select
+        output = CSV::Table::new [], headers: self.headers
+
+        self.each do |row|
+            output << row if yield row
+        end
+
+        output
+    end
+end
+
+class Department
+    attr_reader :subjects
+    attr_reader :code
     
-    discs.sort_by { |d| d["codigo"] }
+    SUBJECTS = CSV::read "data/disciplinas.csv", headers: true
 
-    for disc in discs do 
-        nome = disc["nome"]
-        refs = disc["referencias"]
+    def initialize code
+        @subjects = []
+        @code = code
 
-        sec << (subject sec, code(dep, disc["codigo"]), nome, refs)
+        SUBJECTS.select { |row| row[CODE].start_with? code }.each do |subject|
+            @subjects << Subject::new(subject[CODE], subject[NAME])
+        end
+
+        @subjects.sort_by(&:code)
     end
 
-    sec
+    def render parent
+        sec = Asciidoctor::Section::new parent, 1
+        sec.title = "Departamento de #{DEPARTMENT[@code]}"
+        sec.numbered = false
+        sec.id = @code.downcase
+
+        for subject in @subjects do
+            sec << subject.render(sec)
+        end
+
+        sec
+    end
 end
 
-def subject parent, code, nome, refs
-    sec = Asciidoctor::Section::new parent, 2
-    sec.title = "#{code} - #{nome}"
-    sec.numbered = false
-    sec.id = code.downcase
-    
-    refs.sort_by { |ref| ref["titulo"] }
+class Subject
+    attr_reader :code
+    attr_reader :references
 
-    list = Asciidoctor::List::new sec, :ulist
-    sec << list
+    REFERENCES = CSV::read "data/referências.csv", headers: true
 
-    for ref in refs.sort_by do
-        list << (reference list, ref)
+    def initialize code, name
+        @references = []
+        @code = code
+        @name = name.strip
+
+        REFERENCES.select { |row| row[CODE] == code }.each do |reference|
+            title = reference[TITLE]
+            volume = reference[VOLUME]
+            authors = reference[AUTHORS].split(/ *; */)
+            year = reference[YEAR]
+            pdf_link = reference[PDF_LINK]
+
+            @references << Reference::new(title, volume, authors, year, pdf_link)
+        end
+
+        @references.sort_by { |reference| reference.title }
     end
 
-    sec
+    def render parent
+        sec = Asciidoctor::Section::new parent, 2
+        sec.title = "#{@code} - #{@name}"
+        sec.numbered = false
+        sec.id = code.downcase
+
+        list = Asciidoctor::List::new sec, :ulist
+        sec << list
+
+        for reference in @references do
+            list << reference.render(list)
+        end
+
+        sec
+    end
 end
 
-def reference parent, ref
-    authores = ref["autores"]
-        .sort
-        .map { |nome| author nome }
-        .join ". ; "
+class Reference
+    attr_reader :title, :volume, :authors, :year, :links
 
-    src = "#{authores}. #{title ref}. #{ref["ano"]}"
-    item = Asciidoctor::ListItem::new parent, src
-    links = Asciidoctor::List::new item, :ulist
+    def initialize title, volume, authors, year, pdf_link
+        @title = format_title title, volume
+        @year = year
+        @links = { "PDF" => pdf_link }
 
-    ref["links"].sort_by(&:first).each do |format, url|
-        links << (link links, url, "Download em #{format.strip.upcase}")
+        @authors = authors
+            .sort
+            .map { |name| format_author name }
+            .join ". ; "
     end
 
-    item << links
+    def render parent
+        src = "#{@authors}. #{@title}. #{@year}"
+        item = Asciidoctor::ListItem::new parent, src
+        links = Asciidoctor::List::new item, :ulist
+
+        @links.sort_by(&:first).each do |format, url|
+            links << link(links, url, "Download em #{format.strip.upcase}")
+        end
+
+        item << links
+    end
 end
 
-def author nome 
-    nomes = nome.split(/ +/)
-    first_names = nomes[0..-2]
-        .map { |nome| nome[0, 1] }
+def format_author name 
+    names = name.split(/ +/)
+    first_names = names[0..-2]
+        .map { |name| name[0, 1] }
         .select(&:upcase?)
-        .join '. '
+        .join ". "
     
-    "#{nomes.last.upcase}, #{first_names}"
+    "#{names.last.upcase}, #{first_names}"
 end
 
-def title ref
-    output = "_#{ref["titulo"].strip}_"
+def format_title title, volume
+    secs = title.split(/ *; */)
 
-    if ref["subtitulo"]
-        output << ": _#{ref["subtitulo"].strip}_"
+    case secs.length
+    when 1
+        title = secs[0]
+        subtitle = nil
+    when 2
+        title = secs[0]
+        subtitle = secs[1]
     end
 
-    if ref["volume"] && ref["volume"].class == Integer
+    output = "_#{title.strip}_"
+    output << ": _#{subtitle.strip}_" if subtitle
+
+    if volume && volume.class == Integer
         output << ", _vol. #{ref["volume"].roman}_"
     end
 
     output
-end
-
-def code dep, c
-    if c.upcase.start_with? dep.upcase
-        c = c[3..-1]
-    end
-
-    dep.upcase + c.rjust(4, "0")
 end
 
 def link parent, url, text
@@ -152,15 +219,13 @@ end
 doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
 
 # Carrega os dados a serem adicionados
-deps = File::open "references.json", "r"
-deps = JSON.parse(deps.read)
+deps = File::open "data/references.json", "r"
+deps = JSON::parse(deps.read)
 
 # Adiciona a informação de cada department
-
-deps.sort_by(&:first).each do |dep, discs|
-    if discs.length > 0
-        doc << (department doc, dep, discs)
-    end
+for dep_code in DEPARTMENT.keys do
+    department = Department::new dep_code
+    doc << department.render(doc)
 end
 
 # Salva o site
