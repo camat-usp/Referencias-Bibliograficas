@@ -1,11 +1,9 @@
 #!/usr/bin/ruby
 
 require "asciidoctor"
-require "json"
 require "csv"
 
 OUTPUT = File::open  "index.html", "w"
-FAVICON = "./assets/favicon.svg"
 DEPARTMENT = {
     "MAT" => "Matemática",
     "MAP" => "Matemática Aplicada",
@@ -20,7 +18,6 @@ VOLUME = "VOLUME"
 AUTHORS = "AUTORES"
 YEAR = "ANO"
 PDF_LINK = "LINK PDF"
-
 
 class Integer
   ROMAN_NUMBERS = {
@@ -58,30 +55,20 @@ class String
     end
 end
 
-class CSV::Table
-    def select
-        output = CSV::Table::new [], headers: self.headers
-
-        self.each do |row|
-            output << row if yield row
-        end
-
-        output
-    end
-end
-
 class Department
     attr_reader :subjects
     attr_reader :code
     
-    SUBJECTS = CSV::read "data/disciplinas.csv", headers: true
+    SUBJECTS = CSV::read "data/subjects.csv", headers: true
 
     def initialize code
         @subjects = []
         @code = code
 
         SUBJECTS.select { |row| row[CODE].start_with? code }.each do |subject|
-            @subjects << Subject::new(subject[CODE], subject[NAME])
+            if subject[CODE].start_with? code
+                @subjects << Subject::new(subject[CODE], subject[NAME])
+            end
         end
 
         @subjects.sort_by(&:code)
@@ -105,21 +92,24 @@ class Subject
     attr_reader :code
     attr_reader :references
 
-    REFERENCES = CSV::read "data/referências.csv", headers: true
+    REFERENCES = CSV::read "data/references.csv", headers: true
 
     def initialize code, name
         @references = []
         @code = code
         @name = name.strip
 
-        REFERENCES.select { |row| row[CODE] == code }.each do |reference|
-            title = reference[TITLE]
-            volume = reference[VOLUME]
-            authors = reference[AUTHORS].split(/ *; */)
-            year = reference[YEAR]
-            pdf_link = reference[PDF_LINK]
+        REFERENCES.each do |reference|
+            if reference[CODE] == code
+                title = reference[TITLE]
+                volume = reference[VOLUME]
+                authors = reference[AUTHORS].split(/ *; */)
+                year = reference[YEAR]
+                links = {"PDF" => reference[PDF_LINK]}
 
-            @references << Reference::new(title, volume, authors, year, pdf_link)
+                ref = Reference::new(title, volume, authors, year, links)
+                @references << ref 
+            end
         end
 
         @references.sort_by { |reference| reference.title }
@@ -145,10 +135,10 @@ end
 class Reference
     attr_reader :title, :volume, :authors, :year, :links
 
-    def initialize title, volume, authors, year, pdf_link
+    def initialize title, volume, authors, year, links
         @title = format_title title, volume
         @year = year
-        @links = { "PDF" => pdf_link }
+        @links = links
 
         @authors = authors
             .sort
@@ -194,8 +184,16 @@ def format_title title, volume
     output = "_#{title.strip}_"
     output << ": _#{subtitle.strip}_" if subtitle
 
-    if volume && volume.class == Integer
-        output << ", _vol. #{ref["volume"].roman}_"
+    case volume
+    when Integer
+        output << ", _vol. #{volume.roman}_"
+    when String
+        begin
+            volume = volume.to_i
+            output << ", _vol. #{volume.roman}_"
+        rescue ArgumentError
+            output << ", _vol. #{volume.upcase}_"
+        end
     end
 
     output
@@ -217,10 +215,6 @@ end
 
 # Carrega a introdução
 doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
-
-# Carrega os dados a serem adicionados
-deps = File::open "data/references.json", "r"
-deps = JSON::parse(deps.read)
 
 # Adiciona a informação de cada department
 for dep_code in DEPARTMENT.keys do
