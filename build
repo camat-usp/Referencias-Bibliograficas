@@ -56,8 +56,7 @@ class String
 end
 
 class Department
-    attr_reader :subjects
-    attr_reader :code
+    attr_reader :subjects, :code
     
     SUBJECTS = CSV::read "data/subjects.csv", headers: true
 
@@ -65,9 +64,10 @@ class Department
         @subjects = []
         @code = code
 
-        SUBJECTS.select { |row| row[CODE].start_with? code }.each do |subject|
-            if subject[CODE].start_with? code
-                @subjects << Subject::new(subject[CODE], subject[NAME])
+        SUBJECTS.each do |sub|
+            if sub[CODE].start_with? code
+                subject = Subject::new(sub[CODE], sub[NAME])
+                @subjects << subject if !subject.empty?
             end
         end
 
@@ -86,11 +86,14 @@ class Department
 
         sec
     end
+
+    def empty?
+        @subjects.empty?
+    end
 end
 
 class Subject
-    attr_reader :code
-    attr_reader :references
+    attr_reader :code, :references
 
     REFERENCES = CSV::read "data/references.csv", headers: true
 
@@ -99,16 +102,16 @@ class Subject
         @code = code
         @name = name.strip
 
-        REFERENCES.each do |reference|
-            if reference[CODE] == code
-                title = reference[TITLE]
-                volume = reference[VOLUME]
-                authors = reference[AUTHORS].split(/ *; */)
-                year = reference[YEAR]
-                links = {"PDF" => reference[PDF_LINK]}
+        REFERENCES.each do |ref|
+            if ref[CODE] == code
+                title = ref[TITLE]
+                volume = ref[VOLUME]
+                authors = ref[AUTHORS].split(/ *; */)
+                year = ref[YEAR]
+                links = {"PDF" => ref[PDF_LINK]}
 
-                ref = Reference::new(title, volume, authors, year, links)
-                @references << ref 
+                reference = Reference::new(title, volume, authors, year, links)
+                @references << reference 
             end
         end
 
@@ -130,6 +133,10 @@ class Subject
 
         sec
     end
+
+    def empty?
+        @references.empty?
+    end
 end
 
 class Reference
@@ -149,13 +156,18 @@ class Reference
     def render parent
         src = "#{@authors}. #{@title}. #{@year}"
         item = Asciidoctor::ListItem::new parent, src
-        links = Asciidoctor::List::new item, :ulist
 
-        @links.sort_by(&:first).each do |format, url|
-            links << link(links, url, "Download em #{format.strip.upcase}")
+        if !@links.empty?
+            links = Asciidoctor::List::new item, :ulist
+
+            @links.sort_by(&:first).each do |format, url|
+                links << link(links, url, "Download em #{format.strip.upcase}")
+            end
+
+            item << links
         end
 
-        item << links
+        item
     end
 end
 
@@ -219,7 +231,7 @@ doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
 # Adiciona a informação de cada department
 for dep_code in DEPARTMENT.keys do
     department = Department::new dep_code
-    doc << department.render(doc)
+    doc << department.render(doc) if !department.empty?
 end
 
 # Salva o site
