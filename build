@@ -17,7 +17,9 @@ TITLE = "TÍTULO"
 VOLUME = "VOLUME"
 AUTHORS = "AUTORES"
 YEAR = "ANO"
-PDF_LINK = "LINK PDF"
+PDF = "PDF"
+DJVU = "DJVU"
+EPUB = "EPUB"
 
 class Integer
   ROMAN_NUMBERS = {
@@ -117,7 +119,11 @@ class Subject
                 volume = ref[VOLUME]
                 authors = ref[AUTHORS].split(/ *; */)
                 year = ref[YEAR]
-                links = {"PDF" => ref[PDF_LINK]}
+                links = {}
+
+                links[PDF]  = ref[PDF]  if ref[PDF]
+                links[DJVU] = ref[DJVU] if ref[DJVU]
+                links[EPUB] = ref[EPUB] if ref[EPUB]
 
                 reference = Reference::new(title, volume, authors, year, links)
                 @references << reference 
