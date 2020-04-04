@@ -21,6 +21,6 @@ precisam -- na verdade, moralmente, não podem -- manter este privilégio para
 vocês mesmos. Vocês têm um dever de compartilhar isso com o mundo.
 ____
 
-Confira link:manifesto.html[manifesto na integra]! Confira também 
-https://github.com/camat-usp/Referencias-Bibliograficas[nossa página no GitHub]!
+Confira o link:manifesto.html[manifesto na integra]! Confira também 
+https://github.com/camat-usp/Referencias-Bibliograficas[nosso repo no GitHub]!
 

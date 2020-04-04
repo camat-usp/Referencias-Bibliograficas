@@ -55,9 +55,12 @@ class String
     end
 end
 
+# Public: Classe que representa a seção do site dedicada a um departamento 
+# (MAT, MAC, etc)
 class Department
     attr_reader :subjects, :code
     
+    # Os dados correspondentes a todas as disciplinas
     SUBJECTS = CSV::read "data/subjects.csv", headers: true
 
     def initialize code
@@ -74,6 +77,7 @@ class Department
         @subjects.sort_by(&:code)
     end
 
+    # Public: Gera a seção de `Asciidoc` correspondente a esse departamento
     def render parent
         sec = Asciidoctor::Section::new parent, 1
         sec.title = "Departamento de #{DEPARTMENT[@code]}"
@@ -87,14 +91,19 @@ class Department
         sec
     end
 
+    # Public: Indica se existe conteúdo nessa seção, isto é, se existe alguma 
+    # disciplina nesse departamento (da qual possuimos informações)
     def empty?
         @subjects.empty?
     end
 end
 
+# Public: Classe que representa a seção do site dedicada a uma disciplina 
+# (MAT0205, MAC0110, etc)
 class Subject
     attr_reader :code, :references
 
+    # Os dados correspondentes a todas as referências bibliográficas
     REFERENCES = CSV::read "data/references.csv", headers: true
 
     def initialize code, name
@@ -118,6 +127,7 @@ class Subject
         @references.sort_by { |reference| reference.title }
     end
 
+    # Public: Gera a seção de `Asciidoc` correspondente a essa disciplina
     def render parent
         sec = Asciidoctor::Section::new parent, 2
         sec.title = "#{@code} - #{@name}"
@@ -134,18 +144,25 @@ class Subject
         sec
     end
 
+    # Public: Indica se existe conteúdo nessa seção, isto é, se existe alguma 
+    # referência bibliográfica nessa disciplina (da qual possuimos informações)
     def empty?
         @references.empty?
     end
 end
 
+# Public: Classe que representa a seção do site dedicada a uma referência 
+# ("HOFFMAN, K. ; KUNZE, R. Álgebra Linear. 1971", etc)
 class Reference
     attr_reader :title, :volume, :authors, :year, :links
 
     def initialize title, volume, authors, year, links
         @title = format_title title, volume
         @year = year
+
         @links = links
+            .sort_by(&:first)
+            .map { |format, url| Link::new(format, url) }
 
         @authors = authors
             .sort
@@ -153,6 +170,7 @@ class Reference
             .join ". ; "
     end
 
+    # Public: Gera a seção de `Asciidoc` correspondente a essa referência
     def render parent
         src = "#{@authors}. #{@title}. #{@year}"
         item = Asciidoctor::ListItem::new parent, src
@@ -160,8 +178,8 @@ class Reference
         if !@links.empty?
             links = Asciidoctor::List::new item, :ulist
 
-            @links.sort_by(&:first).each do |format, url|
-                links << link(links, url, "Download em #{format.strip.upcase}")
+            for link in @links do
+                links << link.render(links)
             end
 
             item << links
@@ -171,6 +189,35 @@ class Reference
     end
 end
 
+# Public: Classe que representa uma entrada na lista de links de download
+class Link
+    attr_reader :format, :url
+
+    INLINE_OPTS = {:type => :link}
+
+    def initialize format, url
+        @format = format.upcase
+        
+        if url.start_with? "http"
+            @url = url
+        else
+            @url = "https://#{url}"
+        end
+    end
+
+    # Public: Gera o item de `Asciidoc` correspondente a essa entrada
+    def render parent
+        txt =  "<strong>Download em #{@format}</strong>"
+
+        output = Asciidoctor::ListItem::new parent, ""
+        anchor = Asciidoctor::Inline::new output, :anchor, txt, INLINE_OPTS
+        anchor.target = @url
+
+        output << anchor
+    end
+end
+
+# Public: Formata o nome do autor adequadamente
 def format_author name 
     names = name.split(/ +/)
     first_names = names[0..-2]
@@ -181,16 +228,18 @@ def format_author name
     "#{names.last.upcase}, #{first_names}"
 end
 
+# Public: Formata o título do livro adequadamente
 def format_title title, volume
     secs = title.split(/ *; */)
+    title = secs[0]
 
     case secs.length
     when 1
-        title = secs[0]
         subtitle = nil
     when 2
-        title = secs[0]
         subtitle = secs[1]
+    else
+        raise ArgumentError
     end
 
     output = "_#{title.strip}_"
@@ -209,20 +258,6 @@ def format_title title, volume
     end
 
     output
-end
-
-def link parent, url, text
-    txt =  "<strong>#{text}</strong>"
-    output = Asciidoctor::ListItem::new parent, ""
-    anchor = Asciidoctor::Inline::new output, :anchor, txt, {:type => :link}
-
-    if url.start_with? "http"
-        anchor.target = url
-    else
-        anchor.target = "https://#{url}"
-    end
-
-    output << anchor
 end
 
 # Carrega a introdução
