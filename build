@@ -1,16 +1,25 @@
 #!/usr/bin/ruby
 
-require 'asciidoctor'
-require 'json'
+require "asciidoctor"
+require "csv"
 
 OUTPUT = File::open  "index.html", "w"
-FAVICON = "./assets/favicon.svg"
-NOMES = {
+DEPARTMENT = {
     "MAT" => "Matemática",
     "MAP" => "Matemática Aplicada",
     "MAE" => "Estatística",
     "MAC" => "Computação"
 }
+
+CODE = "CÓDIGO"
+NAME = "NOME"
+TITLE = "TÍTULO"
+VOLUME = "VOLUME"
+AUTHORS = "AUTORES"
+YEAR = "ANO"
+PDF = "PDF"
+DJVU = "DJVU"
+EPUB = "EPUB"
 
 class Integer
   ROMAN_NUMBERS = {
@@ -48,119 +57,222 @@ class String
     end
 end
 
-# Public: Cria a seção de um dado departamento.
-def department parent, dep, discs
-    sec = Asciidoctor::Section::new parent, 1
-    sec.title = "Departamento de #{NOMES[dep]}"
-    sec.numbered = false
-    sec.id = dep.downcase
+# Public: Classe que representa a seção do site dedicada a um departamento 
+# (MAT, MAC, etc)
+class Department
+    attr_reader :subjects, :code
     
-    discs.sort_by { |d| d["codigo"] }
+    # Os dados correspondentes a todas as disciplinas
+    SUBJECTS = CSV::read "data/subjects.csv", headers: true
 
-    for disc in discs do 
-        nome = disc["nome"]
-        refs = disc["referencias"]
+    def initialize code
+        @subjects = []
+        @code = code
 
-        sec << (subject sec, code(dep, disc["codigo"]), nome, refs)
+        SUBJECTS.each do |sub|
+            if sub[CODE].start_with? code
+                subject = Subject::new(sub[CODE], sub[NAME])
+                @subjects << subject if !subject.empty?
+            end
+        end
+
+        @subjects.sort_by(&:code)
     end
 
-    sec
-end
+    # Public: Gera a seção de `Asciidoc` correspondente a esse departamento
+    def render parent
+        sec = Asciidoctor::Section::new parent, 1
+        sec.title = "Departamento de #{DEPARTMENT[@code]}"
+        sec.numbered = false
+        sec.id = @code.downcase
 
-def subject parent, code, nome, refs
-    sec = Asciidoctor::Section::new parent, 2
-    sec.title = "#{code} - #{nome}"
-    sec.numbered = false
-    sec.id = code.downcase
-    
-    refs.sort_by { |ref| ref["titulo"] }
+        for subject in @subjects do
+            sec << subject.render(sec)
+        end
 
-    list = Asciidoctor::List::new sec, :ulist
-    sec << list
-
-    for ref in refs.sort_by do
-        list << (reference list, ref)
+        sec
     end
 
-    sec
+    # Public: Indica se existe conteúdo nessa seção, isto é, se existe alguma 
+    # disciplina nesse departamento (da qual possuimos informações)
+    def empty?
+        @subjects.empty?
+    end
 end
 
-def reference parent, ref
-    authores = ref["autores"]
-        .sort
-        .map { |nome| author nome }
-        .join ". ; "
+# Public: Classe que representa a seção do site dedicada a uma disciplina 
+# (MAT0205, MAC0110, etc)
+class Subject
+    attr_reader :code, :references
 
-    src = "#{authores}. #{title ref}. #{ref["ano"]}"
-    item = Asciidoctor::ListItem::new parent, src
-    links = Asciidoctor::List::new item, :ulist
+    # Os dados correspondentes a todas as referências bibliográficas
+    REFERENCES = CSV::read "data/references.csv", headers: true
 
-    ref["links"].sort_by(&:first).each do |format, url|
-        links << (link links, url, "Download em #{format.strip.upcase}")
+    def initialize code, name
+        @references = []
+        @code = code
+        @name = name.strip
+
+        REFERENCES.each do |ref|
+            if ref[CODE] == code
+                title = ref[TITLE]
+                volume = ref[VOLUME]
+                authors = ref[AUTHORS].split(/ *; */)
+                year = ref[YEAR]
+                links = {}
+
+                links[PDF]  = ref[PDF]  if ref[PDF]
+                links[DJVU] = ref[DJVU] if ref[DJVU]
+                links[EPUB] = ref[EPUB] if ref[EPUB]
+
+                reference = Reference::new(title, volume, authors, year, links)
+                @references << reference 
+            end
+        end
+
+        @references.sort_by { |reference| reference.title }
     end
 
-    item << links
+    # Public: Gera a seção de `Asciidoc` correspondente a essa disciplina
+    def render parent
+        sec = Asciidoctor::Section::new parent, 2
+        sec.title = "#{@code} - #{@name}"
+        sec.numbered = false
+        sec.id = code.downcase
+
+        list = Asciidoctor::List::new sec, :ulist
+        sec << list
+
+        for reference in @references do
+            list << reference.render(list)
+        end
+
+        sec
+    end
+
+    # Public: Indica se existe conteúdo nessa seção, isto é, se existe alguma 
+    # referência bibliográfica nessa disciplina (da qual possuimos informações)
+    def empty?
+        @references.empty?
+    end
 end
 
-def author nome 
-    nomes = nome.split(/ +/)
-    first_names = nomes[0..-2]
-        .map { |nome| nome[0, 1] }
+# Public: Classe que representa a seção do site dedicada a uma referência 
+# ("HOFFMAN, K. ; KUNZE, R. Álgebra Linear. 1971", etc)
+class Reference
+    attr_reader :title, :volume, :authors, :year, :links
+
+    def initialize title, volume, authors, year, links
+        @title = format_title title, volume
+        @year = year
+
+        @links = links
+            .sort_by(&:first)
+            .map { |format, url| Link::new(format, url) }
+
+        @authors = authors
+            .sort
+            .map { |name| format_author name }
+            .join ". ; "
+    end
+
+    # Public: Gera a seção de `Asciidoc` correspondente a essa referência
+    def render parent
+        src = "#{@authors}. #{@title}. #{@year}"
+        item = Asciidoctor::ListItem::new parent, src
+
+        if !@links.empty?
+            links = Asciidoctor::List::new item, :ulist
+
+            for link in @links do
+                links << link.render(links)
+            end
+
+            item << links
+        end
+
+        item
+    end
+end
+
+# Public: Classe que representa uma entrada na lista de links de download
+class Link
+    attr_reader :format, :url
+
+    INLINE_OPTS = {:type => :link}
+
+    def initialize format, url
+        @format = format.upcase
+        
+        if url.start_with? "http"
+            @url = url
+        else
+            @url = "https://#{url}"
+        end
+    end
+
+    # Public: Gera o item de `Asciidoc` correspondente a essa entrada
+    def render parent
+        txt =  "<strong>Download em #{@format}</strong>"
+
+        output = Asciidoctor::ListItem::new parent, ""
+        anchor = Asciidoctor::Inline::new output, :anchor, txt, INLINE_OPTS
+        anchor.target = @url
+
+        output << anchor
+    end
+end
+
+# Public: Formata o nome do autor adequadamente
+def format_author name 
+    names = name.split(/ +/)
+    first_names = names[0..-2]
+        .map { |name| name[0, 1] }
         .select(&:upcase?)
-        .join '. '
+        .join ". "
     
-    "#{nomes.last.upcase}, #{first_names}"
+    "#{names.last.upcase}, #{first_names}"
 end
 
-def title ref
-    output = "_#{ref["titulo"].strip}_"
+# Public: Formata o título do livro adequadamente
+def format_title title, volume
+    secs = title.split(/ *; */)
+    title = secs[0]
 
-    if ref["subtitulo"]
-        output << ": _#{ref["subtitulo"].strip}_"
+    case secs.length
+    when 1
+        subtitle = nil
+    when 2
+        subtitle = secs[1]
+    else
+        raise ArgumentError
     end
 
-    if ref["volume"] && ref["volume"].class == Integer
-        output << ", _vol. #{ref["volume"].roman}_"
+    output = "_#{title.strip}_"
+    output << ": _#{subtitle.strip}_" if subtitle
+
+    case volume
+    when Integer
+        output << ", _vol. #{volume.roman}_"
+    when String
+        begin
+            volume = volume.to_i
+            output << ", _vol. #{volume.roman}_"
+        rescue ArgumentError
+            output << ", _vol. #{volume.upcase}_"
+        end
     end
 
     output
 end
 
-def code dep, c
-    if c.upcase.start_with? dep.upcase
-        c = c[3..-1]
-    end
-
-    dep.upcase + c.rjust(4, "0")
-end
-
-def link parent, url, text
-    txt =  "<strong>#{text}</strong>"
-    output = Asciidoctor::ListItem::new parent, ""
-    anchor = Asciidoctor::Inline::new output, :anchor, txt, {:type => :link}
-
-    if url.start_with? "http"
-        anchor.target = url
-    else
-        anchor.target = "https://#{url}"
-    end
-
-    output << anchor
-end
-
 # Carrega a introdução
 doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
 
-# Carrega os dados a serem adicionados
-deps = File::open "references.json", "r"
-deps = JSON.parse(deps.read)
-
 # Adiciona a informação de cada department
-
-deps.sort_by(&:first).each do |dep, discs|
-    if discs.length > 0
-        doc << (department doc, dep, discs)
-    end
+for dep_code in DEPARTMENT.keys do
+    department = Department::new dep_code
+    doc << department.render(doc) if !department.empty?
 end
 
 # Salva o site
