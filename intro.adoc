@@ -6,11 +6,13 @@ CAMat <camat.usp@gmail.com>
 :stylesheet: assets/styles.css
 :hide-uri-scheme:
 
-Reunimos neste site alguns links de download dos livros comumento utilizados
-nas disciplinas do IME - USP.
+
+Reunimos https://camat-usp.github.io/Referencias-Bibliograficas/[neste site] 
+alguns links de download dos livros comumente utilizados em disciplinas relacionadas 
+aos cursos do IME - USP.
 
 As informações foram obtidas através do JupiterWeb, na relação bibliográfica de
-cada disciplina.
+cada disciplina, e de colaborações através https://forms.gle/ETVd3qDpj9XjuC3C6[deste formulário].
 
 [quote,Aaron Swartz,Julho de 2008]
 ____
