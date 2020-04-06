@@ -52,8 +52,38 @@ class Integer
 end
 
 class String
+    TITLELIZE_OMIT = [
+        "de",
+        "com",
+        "um", 
+        "uma",
+        "ao", 
+        "à",
+        "em",
+        "to", 
+        "of", 
+        "and",
+        "in",
+        "a", 
+        "an", 
+        "the"
+    ].to_set
+
     def upcase?
         !self[/[[:lower:]]/]
+    end
+
+    def titlelize
+        words = self.strip.split(/ +/)
+        titlelized_words = words.map.with_index do |word, i|
+            if TITLELIZE_OMIT.include?(word.downcase) && i != 0 
+                word.downcase
+            else
+                word.capitalize
+            end
+        end
+
+        titlelized_words.join " "
     end
 end
 
@@ -75,8 +105,9 @@ class Department
                 @subjects << subject if !subject.empty?
             end
         end
-
-        @subjects.sort_by(&:code)
+        
+        @subjects.uniq!
+        @subjects.sort_by! { |sub| sub.code.strip }
     end
 
     # Public: Gera a seção de `Asciidoc` correspondente a esse departamento
@@ -130,7 +161,7 @@ class Subject
             end
         end
 
-        @references.sort_by { |reference| reference.title }
+        @references.sort_by! { |reference| reference.title.strip }
     end
 
     # Public: Gera a seção de `Asciidoc` correspondente a essa disciplina
@@ -150,6 +181,14 @@ class Subject
         sec
     end
 
+    def ==(other)
+        case other
+        when Subject
+            self.code == other.code
+        else
+            false
+        end
+    end
     # Public: Indica se existe conteúdo nessa seção, isto é, se existe alguma 
     # referência bibliográfica nessa disciplina (da qual possuimos informações)
     def empty?
@@ -236,7 +275,7 @@ end
 
 # Public: Formata o título do livro adequadamente
 def format_title title, volume
-    secs = title.split(/ *; */)
+    secs = title.titlelize.split(/ *: */)
     title = secs[0]
 
     case secs.length
@@ -255,12 +294,7 @@ def format_title title, volume
     when Integer
         output << ", _vol. #{volume.roman}_"
     when String
-        begin
-            volume = volume.to_i
-            output << ", _vol. #{volume.roman}_"
-        rescue ArgumentError
-            output << ", _vol. #{volume.upcase}_"
-        end
+        output << ", _vol. #{volume.to_i.roman}_"
     end
 
     output
