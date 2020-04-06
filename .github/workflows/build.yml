@@ -23,3 +23,5 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
         bundle exec ruby build
+        git add .
+        git commit -m "Updated index.html"
