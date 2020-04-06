@@ -1,121 +1,16 @@
 CÓDIGO,NOME
 4300152,Introdução às Medidas em Física
+4300152,Introdução à Física
 4300159,Termodinâmica I
 4300160,Ótica
-EDF0285,Introdução aos Estudos da Educação: Enfoque Filosófico
-EDF0287,Introdução aos Estudos da Educação: Enfoque Histórico
-EDF0289,Introdução aos Estudos da Educação: Enfoque Sociológico
-EDF0290,"Práticas Escolares, Contemporaneidade e Processos de Subjetivação"
-EDF0292,A Psicologia Histórico-cultural e a Compreensão do Fenômeno Educativo
-EDF0294,"A Psicanálise, Educação e Cultura"
-EDF0298,"Práticas Escolares, Diversidade, Subjetividade"
-EDM0427,Metodologia do Ensino de Matemática I
-EDM0685,Experimentação e Modelagem
-FLH0423,A Escola no Mundo Contemporâneo
-MAC0110,Introdução à Computação .
-MAE0221,Probabilidade I
-MAE1511,Estatística para a Licenciatura I
-MAE1514,Estatística no Ensino Básico
-MAP0151,Cálculo Numérico e Aplicações
-MAP2110,Modelagem e Matemática
-MAP2210,Aplicações de Álgebra Linear
-MAP2212,Laboratório de Computação e Simulação
-MAT0105,Geometria Analítica
-MAT0120,Álgebra I para Licenciatura
-MAT0130,Equações Diferenciais Ordinárias e Aplicações
-MAT0231,Algebra II para Licenciatura
-MAT0240,Geometria e Desenho Geométrico II
-MAT0310,Geometria III
-MAT0317,Topologia
-MAT0451,Projeto de Ensino de Matemática
-MAT1351,Cálculo para Funções de uma Variável Real I
-MAT1513,Laboratório de Matemática .
-MAT2351,Cálculo para Funções de Várias Variáveis I
-PSA5100,As Explicações do Fracasso Escolar: Ciência e Ideologia
-PSA5201,Educação Inclusiva
-PSE5142,Motivação em Sala de Aula
 4310137,Física II para o IME
-MAC0110,Introdução à Computação
-MAE0121,Introdução à Probabilidade e à Estatística I
-MAP0316,Equações Diferenciais II
-MAP0413,Equações de Derivadas Parciais
-MAT0111,Cálculo Diferencial e Integral I
-MAT0112,Vetores e Geometria
-MAT0164,Números Inteiros: Uma Introdução à Matemática
-MAT0205,Cálculo Diferencial e Integral III
-MAT0206,Análise Real
-MAT0222,Álgebra Linear II
-MAT0264,Anéis e Corpos
-MAT0311,Cálculo Diferencial e Integral V
-MAT0321,Cálculo Integral
-MAT0330,Teoria dos Conjuntos
-MAT0334,Análise Funcional
-MAT0359,Lógica
-MAT0364,Teoria de Galois
-FLC0474,Língua Portuguesa
-MAC0101,Introdução à Ciência da Computação
-MAC0102,Caminhos no Bacharelado em Ciência da Computação
-MAC0105,Fundamentos de Matemática para a Computação
-MAC0209,Modelagem e Simulação
-MAC0210,Laboratório de Métodos Numéricos
-MAC0213,Atividade Curricular em Comunidade
-MAC0214,Atividade Curricular em Cultura e Extensão
-MAC0215,Atividade Curricular em Pesquisa
-MAC0218,Técnicas de Programação II
-MAC0219,Programação Concorrente e Paralela
-MAC0317,Introdução ao Processamento de Sinais Digitais
-MAC0320,Introdução à Teoria dos Grafos
-MAC0323,Estruturas de Dados
-MAC0327,Desafios de Programação
-MAC0329,Algebra Booleana e Aplicações
-MAC0331,Geometria Computacional
-MAC0335,Leitura Dramática
-MAC0336,Criptografia para Segurança de Dados
-MAC0350,Introdução ao Desenvolvimento de Sistemas de Software
-MAC0375,Biologia de Sistemas
-MAC0425,Inteligência Artificial
-MAC0427,Programação Não Linear
-MAC0439,Laboratório de Bancos de Dados
-MAC0446,Princípios de Interação Homem-computador
-MAC0458,Direito e Software livre
-MAC0460,"Aprendizagem Computacional: Modelos, Algoritmos e Aplicações"
-MAC0465,Biologia Computacional
-MAC0475,Laboratório de Sistemas Computacionais Complexos
-MAC0499,Trabalho de Formatura Supervisionado
-MAC0691,Tópicos na Teoria Algébrica dos Grafos
-MAT0236,Funções Diferenciáveis e Séries
-MAT2453,Cálculo Diferencial e Integral I
-4300152,Introdução à Física
-MAE0125,Perspectivas em Estatística
-MAE0217,Estatística Descritiva
-MAE0312,Introdução aos Processos Estocásticos
-MAE0314,Análise Estatística I
-MAE0315,Tecnologia da Amostragem
-MAE0317,Planejamento e Pesquisa I
-MAE0328,Análise de Regressão
-MAE0413,Estatística Aplicada I
-MAE0420,Sociometria
-MAE0512,Biometria
-MAE0514,Introdução a Análise de Sobrevivência
-MAE0524,Análise Bayesiana de Dados
-MAT0211,Cálculo Diferencial e Integral III
-MAE0314,Análise Estatística
-MAP0215,Cálculo Vetorial e Aplicações
-MAP0216,Introdução à Análise Real
-MAP0217,Cálculo Diferencial
-MAP2210,Aplicações de Algebra Linear
-MAP2310,Métodos Numéricos em Equações Diferenciais I
-MAT0225,Funções Analíticas
-PMR3302,Sistemas Dinâmicos I para Mecatrônica
-PTC3307,Sistemas e Sinais
-PTC3419,Controle Digital
 BIB0143,Recursos Econômicos Vegetais
 BIB0306,Metabolismo Vegetal e Biotecnologia
+BIE0451,Bioclimatologia Ecológica
 BIE0213,Ecologia Animal
 BIE0213,Ecologia dos indivíduos às populações
 BIE0315,Ecologia Animal
 BIE0447,Práticas de Análise de Dados Biológicos
-BIE 0451,Bioclimatologia Ecológica
 BIF0214,Fisiologia Animal: Controle Interno e Reprodução
 BIO0452,"Protenas: estrutura, função e biologia celular"
 BIZ0213,Invertebrados
@@ -138,18 +33,121 @@ EAD0610,Fundamentos de Administração
 EAE0324,Econometria I
 EAE0325,Econometria II
 EAE0327,Econometria III
+EDF0285,Introdução aos Estudos da Educação: Enfoque Filosófico
+EDF0287,Introdução aos Estudos da Educação: Enfoque Histórico
+EDF0289,Introdução aos Estudos da Educação: Enfoque Sociológico
+EDF0290,"Práticas Escolares, Contemporaneidade e Processos de Subjetivação"
+EDF0292,A Psicologia Histórico-cultural e a Compreensão do Fenômeno Educativo
+EDF0294,"A Psicanálise, Educação e Cultura"
+EDF0298,"Práticas Escolares, Diversidade, Subjetividade"
+EDM0427,Metodologia do Ensino de Matemática I
+EDM0685,Experimentação e Modelagem
+FLC0474,Língua Portuguesa
+FLH0423,A Escola no Mundo Contemporâneo
 HCV0130,Ciclo da Vida II
 HEP0140,Estatísticas de Saúde
 HEP0176,Epidemiologia
+MAC0101,Introdução à Ciência da Computação
+MAC0102,Caminhos no Bacharelado em Ciência da Computação
+MAC0105,Fundamentos de Matemática para a Computação
+MAC0110,Introdução à Computação
+MAC0209,Modelagem e Simulação
+MAC0210,Laboratório de Métodos Numéricos
+MAC0213,Atividade Curricular em Comunidade
+MAC0214,Atividade Curricular em Cultura e Extensão
+MAC0215,Atividade Curricular em Pesquisa
+MAC0218,Técnicas de Programação II
+MAC0219,Programação Concorrente e Paralela
+MAC0317,Introdução ao Processamento de Sinais Digitais
+MAC0320,Introdução à Teoria dos Grafos
+MAC0323,Estruturas de Dados
+MAC0327,Desafios de Programação
+MAC0329,Álgebra Booleana e Aplicações
+MAC0331,Geometria Computacional
+MAC0335,Leitura Dramática
+MAC0336,Criptografia para Segurança de Dados
+MAC0350,Introdução ao Desenvolvimento de Sistemas de Software
+MAC0375,Biologia de Sistemas
+MAC0425,Inteligência Artificial
+MAC0427,Programação Não Linear
 MAC0427,Programação não Linear
+MAC0439,Laboratório de Bancos de Dados
+MAC0446,Princípios de Interação Homem-Computador
+MAC0458,Direito e Software livre
+MAC0460,"Aprendizagem Computacional: Modelos, Algoritmos e Aplicações"
+MAC0465,Biologia Computacional
+MAC0475,Laboratório de Sistemas Computacionais Complexos
+MAC0499,Trabalho de Formatura Supervisionado
+MAC0691,Tópicos na Teoria Algébrica dos Grafos
+MAE0121,Introdução à Probabilidade e à Estatística I
+MAE0125,Perspectivas em Estatística
+MAE0217,Estatística Descritiva
+MAE0221,Probabilidade I
+MAE0312,Introdução aos Processos Estocásticos
+MAE0314,Análise Estatística I
+MAE0314,Análise Estatística
+MAE0315,Tecnologia da Amostragem
+MAE0317,Planejamento e Pesquisa I
+MAE0328,Análise de Regressão
 MAE0399,Análise de Dados e Simulação
+MAE0413,Estatística Aplicada I
+MAE0420,Sociometria
+MAE0512,Biometria
+MAE0514,Introdução a Análise de Sobrevivência
 MAE0514,Introdução à Análise de Sobrevivência
+MAE0524,Análise Bayesiana de Dados
 MAE0699,Tópicos de Probabilidade e Estatística
+MAE1511,Estatística para a Licenciatura I
+MAE1514,Estatística no Ensino Básico
+MAP0151,Cálculo Numérico e Aplicações
+MAP0215,Cálculo Vetorial e Aplicações
+MAP0216,Introdução à Análise Real
+MAP0217,Cálculo Diferencial
+MAP0316,Equações Diferenciais II
 MAP0334,Cálculo Integral
+MAP0413,Equações de Derivadas Parciais
+MAP2110,Modelagem e Matemática
+MAP2210,Aplicações de Álgebra Linear
+MAP2212,Laboratório de Computação e Simulação
+MAP2310,Métodos Numéricos em Equações Diferenciais I
 MAP2312,Modelos de Sobrevivência Aplicados
+MAT0105,Geometria Analítica
+MAT0111,Cálculo Diferencial e Integral I
+MAT0112,Vetores e Geometria
+MAT0120,Álgebra I para Licenciatura
+MAT0130,Equações Diferenciais Ordinárias e Aplicações
+MAT0164,Números Inteiros: Uma Introdução à Matemática
+MAT0205,Cálculo Diferencial e Integral III
+MAT0206,Análise Real
+MAT0211,Cálculo Diferencial e Integral III
+MAT0222,Álgebra Linear II
+MAT0225,Funções Analíticas
+MAT0231,Álgebra II para Licenciatura
+MAT0236,Funções Diferenciáveis e Séries
+MAT0240,Geometria e Desenho Geométrico II
+MAT0264,Anéis e Corpos
+MAT0310,Geometria III
+MAT0311,Cálculo Diferencial e Integral V
+MAT0317,Topologia
+MAT0321,Cálculo Integral
+MAT0330,Teoria dos Conjuntos
+MAT0334,Análise Funcional
+MAT0359,Lógica
+MAT0364,Teoria de Galois
+MAT0451,Projeto de Ensino de Matemática
+MAT1351,Cálculo para Funções de uma Variável Real I
+MAT1513,Laboratório de Matemática .
+MAT2351,Cálculo para Funções de Várias Variáveis I
+MAT2453,Cálculo Diferencial e Integral I
 MAT3110,Cálculo Diferencial e Integral I
 MAT3120,Cálculo Diferencial e Integral III
+PMR3302,Sistemas Dinâmicos I para Mecatrônica
 PMR3303,Eletrônica Digital para Mecatrônica
 PMR3406,Microprocessadores em Automação e Robótica
+PSA5100,As Explicações do Fracasso Escolar: Ciência e Ideologia
+PSA5201,Educação Inclusiva
+PSE5142,Motivação em Sala de Aula
 PSI3211,Circuitos Elétricos I
+PTC3307,Sistemas e Sinais
+PTC3419,Controle Digital
 VPS1010,Introdução à Epidemiologia Veterinária
