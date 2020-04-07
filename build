@@ -4,13 +4,7 @@ require "asciidoctor"
 require "csv"
 
 OUTPUT = File::open  "index.html", "w"
-DEPARTMENT = {
-    "MAT" => "Matemática",
-    "MAP" => "Matemática Aplicada",
-    "MAE" => "Estatística",
-    "MAC" => "Computação"
-}
-
+DEPARTMENTS = CSV::read "data/departments.csv", headers: true
 CODE = "CÓDIGO"
 NAME = "NOME"
 TITLE = "TÍTULO"
@@ -90,14 +84,15 @@ end
 # Public: Classe que representa a seção do site dedicada a um departamento 
 # (MAT, MAC, etc)
 class Department
-    attr_reader :subjects, :code
+    attr_reader :subjects, :code, :name
     
     # Os dados correspondentes a todas as disciplinas
     SUBJECTS = CSV::read "data/subjects.csv", headers: true
 
-    def initialize code
+    def initialize code, name
         @subjects = []
         @code = code
+        @name = name.strip
 
         SUBJECTS.each do |sub|
             if sub[CODE].start_with? code
@@ -113,7 +108,7 @@ class Department
     # Public: Gera a seção de `Asciidoc` correspondente a esse departamento
     def render parent
         sec = Asciidoctor::Section::new parent, 1
-        sec.title = "Departamento de #{DEPARTMENT[@code]}"
+        sec.title = @name
         sec.numbered = false
         sec.id = @code.downcase
 
@@ -304,8 +299,8 @@ end
 doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
 
 # Adiciona a informação de cada department
-for dep_code in DEPARTMENT.keys do
-    department = Department::new dep_code
+DEPARTMENTS.each do |dep|
+    department = Department::new dep[CODE], dep[NAME]
     doc << department.render(doc) if !department.empty?
 end
 
