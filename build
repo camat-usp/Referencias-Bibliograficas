@@ -297,11 +297,18 @@ end
 
 # Carrega a introdução
 doc = Asciidoctor::load_file "intro.adoc", {:header_footer => true}
+departments = []
 
 # Adiciona a informação de cada department
 DEPARTMENTS.each do |dep|
-    department = Department::new dep[CODE], dep[NAME]
-    doc << department.render(doc) if !department.empty?
+    department = Department::new dep[CODE], dep[NAME] 
+    departments << department if !department.empty?
+end
+
+departments.sort_by!(&:code)
+
+for department in departments do
+    doc << department.render(doc)
 end
 
 # Salva o site
