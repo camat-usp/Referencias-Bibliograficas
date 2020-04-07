@@ -6,13 +6,15 @@ CAMat <camat.usp@gmail.com>
 :stylesheet: assets/styles.css
 :hide-uri-scheme:
 
+image:https://img.shields.io/github/watchers/camat-usp/Referencias-Bibliograficas?style=social[GitHub, link=https://github.com/camat-usp/Referencias-Bibliograficas]
+image:https://img.shields.io/github/workflow/status/camat-usp/Referencias-Bibliograficas/Build%20website[Status,link=https://github.com/camat-usp/Referencias-Bibliograficas/actions?query=workflow%3A%22Build+website%22]
 
-Reunimos https://camat-usp.github.io/Referencias-Bibliograficas/[neste site] 
-alguns links de download dos livros comumente utilizados em disciplinas relacionadas 
-aos cursos do IME - USP.
+Reunimos neste site alguns links de download dos livros comumente utilizados em 
+disciplinas relacionadas aos cursos do IME - USP.
 
 As informações foram obtidas através do JupiterWeb, na relação bibliográfica de
-cada disciplina, e de colaborações através https://forms.gle/ETVd3qDpj9XjuC3C6[deste formulário].
+cada disciplina, e de colaborações através 
+https://forms.gle/ETVd3qDpj9XjuC3C6[deste formulário].
 
 [quote,Aaron Swartz,Julho de 2008]
 ____
@@ -23,6 +25,5 @@ precisam -- na verdade, moralmente, não podem -- manter este privilégio para
 vocês mesmos. Vocês têm um dever de compartilhar isso com o mundo.
 ____
 
-Confira o link:manifesto.html[manifesto na integra]! Confira também 
-https://github.com/camat-usp/Referencias-Bibliograficas[nosso repo no GitHub]!
+Confira o link:manifesto.html[manifesto na integra]!
 

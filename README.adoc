@@ -2,6 +2,9 @@
 CAMat <camat.usp@gmail.com>
 :hide-uri-scheme:
 
+image:https://img.shields.io/github/watchers/camat-usp/Referencias-Bibliograficas?style=social[GitHub, link=https://camat-usp.github.io/Referencias-Bibliograficas/]
+image:https://img.shields.io/github/workflow/status/camat-usp/Referencias-Bibliograficas/Build%20website[Status,link=https://github.com/camat-usp/Referencias-Bibliograficas/actions?query=workflow%3A%22Build+website%22]
+
 Reunimos https://camat-usp.github.io/Referencias-Bibliograficas/[neste site] 
 alguns links de download dos livros comumente utilizados em disciplinas relacionadas 
 aos cursos do IME - USP.
@@ -17,3 +20,4 @@ de conhecimento, enquanto o resto do mundo está bloqueado. Mas vocês não
 precisam -- na verdade, moralmente, não podem -- manter este privilégio para 
 vocês mesmos. Vocês têm um dever de compartilhar isso com o mundo.
 ____
+
