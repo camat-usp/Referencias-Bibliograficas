@@ -7,7 +7,7 @@ CAMat <camat.usp@gmail.com>
 :hide-uri-scheme:
 
 image:https://img.shields.io/github/stars/camat-usp/Referencias-Bibliograficas?style=social[GitHub, link=https://github.com/camat-usp/Referencias-Bibliograficas]
-image:https://img.shields.io/github/workflow/status/camat-usp/Referencias-Bibliograficas/Build%20website[Status,link=https://github.com/camat-usp/Referencias-Bibliograficas/actions?query=workflow%3A%22Build+website%22]
+image:https://img.shields.io/twitter/follow/CAMatRadical?style=social[Twitter, link=https://twitter.com/CAMatRadical/]
 
 Reunimos neste site alguns links de download dos livros comumente utilizados em 
 disciplinas relacionadas aos cursos do IME - USP.
