@@ -2,7 +2,7 @@
 CAMat <camat.usp@gmail.com>
 :hide-uri-scheme:
 
-image:https://img.shields.io/badge/site-github%20pages-blue[Site, link=https://camat-usp.github.io/Referencias-Bibliograficas/]
+image:https://img.shields.io/badge/Site-GitHub%20Pages-bluei?style=social[Site, link=https://camat-usp.github.io/Referencias-Bibliograficas/]
 image:https://img.shields.io/twitter/follow/CAMatRadical?style=social[Twitter, link=https://twitter.com/CAMatRadical/]
 
 Reunimos https://camat-usp.github.io/Referencias-Bibliograficas/[neste site] 
